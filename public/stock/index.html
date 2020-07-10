@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/share.css?v=32">
+</head>
+<body>
+<div id="app">
+    <div class="header-nav">
+        <div class="nav-left">
+            <div class="nav_logo">自用数据检监测</div>
+        </div>
+        <div class="nav-right">
+            <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#1369bf"
+                    text-color="#ffffff"
+                    active-text-color="#ffffff">
+                <el-menu-item index="1"><a href="/stock/">自选股</a></el-menu-item>
+                <el-menu-item index="2"><a href="/stock/plate.html">板块</a></el-menu-item>
+            </el-menu>
+
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <el-row v-loading.fullscreen.lock="fullscreenLoading">
+        <el-col :span="8" v-for=" (item,index) in sharesData.zhishu" :key="index">
+            <div class="grid-content">
+                {{item.shares_name}} {{item.cur_price}}
+                <div v-if="item.rise_and_fall > 0">
+                    <span class="zhishu_red">+{{ item.rise_and_fall }}(+{{ item.rise_and_fall_rate }}%)</span>
+                </div>
+                <div v-else-if="item.rise_and_fall < 0">
+                    <span class="zhishu_green">{{ item.rise_and_fall }}({{ item.rise_and_fall_rate }}%)</span>
+                </div>
+                <div v-else>
+                    {{ item.rise_and_fall }}({{ item.rise_and_fall_rate }}%)
+                </div>
+
+            </div>
+        </el-col>
+    </el-row>
+
+    <el-tabs v-model="activeName" @tab-click="handleClick" ref="elTabs">
+        <el-tab-pane v-for=" (name,index) in todos" :key="index" :label="name" :name="index">
+            <el-table :height="tableHeight" :data="sharesData.data[index]" style="width: 100%"
+                      :default-sort="{prop: 'shares_code', order: 'descending'}">
+                <el-table-column
+                        prop="shares_code"
+                        label="名称"
+                        fixed
+                        width="130">
+                    <template slot-scope="scope">
+                        <div class="share_black"><a target="_blank" :href="'https://xueqiu.com/S/'+(scope.row.shares_type)+''+(scope.row.shares_code)+''">{{ scope.row.shares_name }}</a></div>
+                        <div class="share_gray">{{ scope.row.shares_type }}{{ scope.row.shares_code }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="industry_board"
+                        label="行业板块"
+                        sortable
+                        width="180">
+                    <template slot-scope="scope">
+                        <div class="share_black">{{ scope.row.industry_board }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="cur_price"
+                        label="当前价"
+                        sortable
+                        :sort-method="price_sort"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div class="share_price">{{ scope.row.cur_price }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="rise_and_fall_rate"
+                        label="涨跌幅"
+                        width="150"
+                        sortable
+                        :sort-method="rise_sort">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.rise_and_fall > 0">
+                            <span class="share_red">+{{ scope.row.rise_and_fall }}(+{{ scope.row.rise_and_fall_rate }}%)</span>
+                        </div>
+                        <div v-else-if="scope.row.rise_and_fall < 0">
+                            <span class="share_green">{{ scope.row.rise_and_fall }}({{ scope.row.rise_and_fall_rate }}%)</span>
+                        </div>
+                        <div v-else>
+                            {{ scope.row.rise_and_fall }}({{ scope.row.rise_and_fall_rate }}%)
+                        </div>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="yesterday_close_price"
+                        label="昨收"
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="today_open_price"
+                        label="今开"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.today_open_price == 0">
+                            <span class="share_green">停牌</span>
+                        </div>
+                        <div v-else>
+                            {{ scope.row.today_open_price }}
+                        </div>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="turnover_rate"
+                        label="换手率"
+                        width="150">
+                    <template slot-scope="scope">
+                        {{ scope.row.turnover_rate }}%
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="turnover"
+                        label="成交额"
+                        width="150">
+                </el-table-column>
+                <el-table-column
+                        prop="pe"
+                        label="市盈率"
+                        sortable
+                        :sort-method="pe_sort"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.pe > 0">
+                            {{ scope.row.pe }}
+                        </div>
+                        <div v-else>
+                            <span  class="share_green" v-if="scope.row.industry_board != 'ETF'">
+                                亏损
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="famc"
+                        label="流通市值(亿)"
+                        sortable
+                        :sort-method="famc_sort"
+                        width="130">
+                </el-table-column>
+                <el-table-column
+                        prop="eur"
+                        label="总市值(亿)"
+                        sortable
+                        :sort-method="eur_sort"
+                        width="130">
+                </el-table-column>
+
+            </el-table>
+        </el-tab-pane>
+    </el-tabs>
+
+    <el-backtop></el-backtop>
+
+
+</div>
+
+</body>
+<script src="/vuejs/axios.min.js"></script>
+<!-- import Vue before Element -->
+<script src="/vuejs/vue.js"></script>
+<!-- import JavaScript -->
+<script src="/vuejs/element-ui.js"></script>
+<script src="./script/index.js?v=22"></script>
+</html>

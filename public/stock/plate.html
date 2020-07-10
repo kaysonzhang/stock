@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/share.css">
+</head>
+<body>
+<div id="app">
+    <div class="header-nav">
+        <div class="nav-left">
+            <div class="nav_logo">自用数据检监测</div>
+        </div>
+        <div class="nav-right">
+            <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#1369bf"
+                    text-color="#ffffff"
+                    active-text-color="#ffffff">
+                <el-menu-item index="1"><a href="/stock">自选股</a></el-menu-item>
+                <el-menu-item index="2"><a href="/stock/plate.html">板块</a></el-menu-item>
+            </el-menu>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <el-tabs v-model="activeName" @tab-click="handleClick" ref="elTabs">
+        <el-tab-pane v-for=" (item,index) in tabs" :key="index" :label="item.text" :name="item.flag">
+            <el-table :height="tableHeight" :data="tableData[item.flag]" style="width: 100%"
+                      :default-sort="{prop: 'date', order: 'descending'}">
+                <el-table-column
+                        prop="rank"
+                        label="排名"
+                        fixed
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="board_name"
+                        label="板块"
+                        fixed
+                        width="130">
+                    <template slot-scope="scope">
+                        <div class="share_black">{{ scope.row.board_name }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="cur_price"
+                        label="最新价"
+                        width="130">
+                    <template slot-scope="scope">
+                        <div class="share_red">{{ scope.row.cur_price }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="rise_and_fall"
+                        label="涨跌额"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.rise_and_fall > 0">
+                            <span class="share_red">+{{ scope.row.rise_and_fall }}</span>
+                        </div>
+                        <div v-else-if="scope.row.rise_and_fall < 0">
+                            <span class="share_green">{{ scope.row.rise_and_fall }}</span>
+                        </div>
+                        <div v-else>
+                            {{ scope.row.rise_and_fall}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="rise_and_fall_rate"
+                        label="涨跌幅"
+                        sortable
+                        :sort-method="rise_sort"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.rise_and_fall_rate > 0">
+                            <span class="share_red">+{{ scope.row.rise_and_fall_rate }}%</span>
+                        </div>
+                        <div v-else-if="scope.row.rise_and_fall_rate < 0">
+                            <span class="share_green">{{ scope.row.rise_and_fall_rate }}%</span>
+                        </div>
+                        <div v-else>
+                            {{ scope.row.rise_and_fall_rate }}%
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="turnover_rate"
+                        label="换手率"
+                        width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.turnover_rate }}%
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="company_up"
+                        label="上涨家数"
+                        width="150">
+                    <template slot-scope="scope">
+                        <div class="share_red">{{ scope.row.company_up }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="company_down"
+                        label="下跌家数"
+                        width="100">
+                    <template slot-scope="scope">
+                        <div class="share_green">{{ scope.row.company_down }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="shares_name"
+                        label="领涨股名称"
+                        width="130">
+                </el-table-column>
+                <el-table-column
+                        prop="shares_rate"
+                        label="涨跌幅">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.shares_rate > 0">
+                            <span class="share_red">+{{ scope.row.shares_rate }}%</span>
+                        </div>
+                        <div v-else-if="scope.row.shares_rate < 0">
+                            <span class="share_green">{{ scope.row.shares_rate }}%</span>
+                        </div>
+                        <div v-else>
+                            {{ scope.row.shares_rate }}%
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+
+    </el-tabs>
+    <el-backtop></el-backtop>
+</div>
+
+</body>
+<script src="/vuejs/axios.min.js"></script>
+<!-- import Vue before Element -->
+<script src="/vuejs/vue.js"></script>
+<!-- import JavaScript -->
+<script src="/vuejs/element-ui.js"></script>
+<script src="./script/plate.js?v=12"></script>
+</html>
