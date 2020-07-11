@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/share.css">
+
+</head>
+<body>
+<div id="app">
+    <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item><a href="/">股票管理</a></el-breadcrumb-item>
+        <el-breadcrumb-item>股票列表</el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <el-row>
+        <el-button>默认按钮</el-button>
+        <el-button type="primary">主要按钮</el-button>
+        <el-button type="success">成功按钮</el-button>
+        <el-button type="info">信息按钮</el-button>
+        <el-button type="warning">警告按钮</el-button>
+        <el-button type="danger">危险按钮</el-button>
+    </el-row>
+
+    <template>
+        <el-table
+                ref="multipleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    label="日期"
+                    width="120">
+                <template slot-scope="scope">{{ scope.row.date }}</template>
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="地址"
+                    show-overflow-tooltip>
+            </el-table-column>
+        </el-table>
+        <div style="margin-top: 20px">
+            <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+            <el-button @click="toggleSelection()">取消选择</el-button>
+        </div>
+    </template>
+
+</div>
+
+</body>
+<script src="/vuejs/axios.min.js"></script>
+<!-- import Vue before Element -->
+<script src="/vuejs/vue.js"></script>
+<!-- import JavaScript -->
+<script src="/vuejs/element-ui.js"></script>
+<script src="./script/stock-list.js?v=12"></script>
+</html>

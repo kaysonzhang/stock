@@ -23,7 +23,7 @@ new Vue({
         let week = parseInt(date.getDay());
         if (week > 0 && week < 6 && hm > 909 && hm < 1501) {
             console.log(parseInt(date.getDay()));
-            setInterval(getshares, 10000);
+            setInterval(getshares, 3000);
         }
 
         function getshares() {

@@ -69,7 +69,7 @@ class BoardService
      */
     public function updateBorad()
     {
-        $sharesService = new SharesService();
+        $sharesService = new StockService();
         $s_data        = $sharesService->getShaersDataFormDb();
         $shareArray    = [];
         $wait          = new \Swoole\Coroutine\WaitGroup();

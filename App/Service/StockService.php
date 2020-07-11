@@ -9,7 +9,7 @@ use EasySwoole\EasySwoole\Config;
 use EasySwoole\Redis\Redis;
 
 
-class SharesService
+class StockService
 {
     use Singleton;
 

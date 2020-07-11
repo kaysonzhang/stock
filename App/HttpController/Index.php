@@ -5,7 +5,7 @@ namespace App\HttpController;
 
 
 use App\Service\BoardService;
-use App\Service\SharesService;
+use App\Service\StockService;
 use App\Utility\DB;
 use EasySwoole\EasySwoole\Core;
 use EasySwoole\EasySwoole\ServerManager;
@@ -17,7 +17,7 @@ class Index extends Controller
 
     public function index()
     {
-        $shareData = SharesService::getInstance()->getShares();
+        $shareData = StockService::getInstance()->getShares();
         $this->response()->write(json_encode($shareData));
         //$this->response()->write($this->clientRealIP( 'x-real-ip'));
     }

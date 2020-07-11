@@ -5,7 +5,7 @@ namespace App\HttpController;
 
 
 use App\Service\BoardService;
-use App\Service\SharesService;
+use App\Service\StockService;
 use App\Utility\DB;
 use EasySwoole\EasySwoole\Core;
 use EasySwoole\EasySwoole\ServerManager;
@@ -52,7 +52,7 @@ class Update extends Controller
 
     public function updateValuation()
     {
-        $ret = SharesService::getInstance()->valuation();
+        $ret = StockService::getInstance()->valuation();
         $this->response()->write(json_encode($ret));
     }
 
