@@ -4,16 +4,21 @@ new Vue({
         return {
             isCollapse: false,
             asidewidth: 100,
-            containerHeight:500,
+            asideHeight:500,
+            asideMenu:menus,
+            iframeUrl:'/manage/stock-list.html',
         }
     },
     created: function () {
-        this.containerHeight = `${document.documentElement.clientHeight}`;
+        this.asideHeight = `${document.documentElement.clientHeight}`-10;
     },
     methods: {
         siderCollapse() {
             this.isCollapse = this.isCollapse ? false : true;
             console.log(this.isCollapse);
+        },
+        iframeOpen(url){
+            this.iframeUrl = url;
         },
     }
 });

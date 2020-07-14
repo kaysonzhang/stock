@@ -11,31 +11,43 @@
 <div id="app">
     <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">股票管理</a></el-breadcrumb-item>
+        <el-breadcrumb-item>股票管理</el-breadcrumb-item>
         <el-breadcrumb-item>股票列表</el-breadcrumb-item>
     </el-breadcrumb>
+    <el-divider></el-divider>
 
-    <el-row>
-        <el-button>默认按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="success">成功按钮</el-button>
-        <el-button type="info">信息按钮</el-button>
-        <el-button type="warning">警告按钮</el-button>
-        <el-button type="danger">危险按钮</el-button>
-    </el-row>
-
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="代码">
+            <el-input v-model="formInline.stockCode" placeholder="股票代码"></el-input>
+        </el-form-item>
+        <el-form-item label="名称">
+            <el-input v-model="formInline.stockName" placeholder="股票名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+        <el-dropdown>
+            <el-button type="primary">
+                更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item>狮子头</el-dropdown-item>
+                <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                <el-dropdown-item>双皮奶</el-dropdown-item>
+                <el-dropdown-item>蚵仔煎</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+    </el-form>
     <template>
         <el-table
                 ref="multipleTable"
                 :data="tableData"
                 tooltip-effect="dark"
                 style="width: 100%"
-                @selection-change="handleSelectionChange">
+                height="330">
             <el-table-column
-                    type="selection"
-                    width="55">
-            </el-table-column>
-            <el-table-column
+                    fixed
                     label="日期"
                     width="120">
                 <template slot-scope="scope">{{ scope.row.date }}</template>
@@ -50,10 +62,29 @@
                     label="地址"
                     show-overflow-tooltip>
             </el-table-column>
+            <el-table-column label="操作" fixed="right" width="180">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
-        <div style="margin-top: 20px">
-            <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
-            <el-button @click="toggleSelection()">取消选择</el-button>
+
+        <div class="block" style="margin-top:5px;">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[100, 200, 300, 400]"
+                    :page-size="100"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="400">
+            </el-pagination>
         </div>
     </template>
 

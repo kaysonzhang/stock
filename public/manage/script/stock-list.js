@@ -2,6 +2,12 @@ new Vue({
     el: '#app',
     data: function () {
         return {
+            formInline: {
+                stockCode: '',
+                stockName: ''
+            },
+            pagesize:10,
+            currentPage: 10,
             tableData: [{
                 date: '2016-05-03',
                 name: '王小虎',
@@ -31,8 +37,6 @@ new Vue({
                 name: '王小虎',
                 address: '上海市普陀区金沙江路 1518 弄'
             }],
-            multipleSelection: []
-
         }
     },
     created:
@@ -42,17 +46,29 @@ new Vue({
 
     ,
     methods: {
-        toggleSelection(rows) {
-            if (rows) {
-                rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
+        stockList() {
+            axios.get('http://stock.kaysonzhang.cn:9601/')
+                .then((response) => {
+                    let jdata = response.data;
+
+
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .then(function () {
+                    // always executed
                 });
-            } else {
-                this.$refs.multipleTable.clearSelection();
-            }
         },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
+        onSubmit() {
+            console.log('submit!');
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
         }
 
     }
