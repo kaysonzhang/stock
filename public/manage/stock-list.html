@@ -9,12 +9,13 @@
 </head>
 <body>
 <div id="app">
+    <div style="padding:15px 0;">
     <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>股票管理</el-breadcrumb-item>
         <el-breadcrumb-item>股票列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-divider></el-divider>
+    </div>
 
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="代码">
@@ -26,51 +27,77 @@
         <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
-        <el-dropdown>
-            <el-button type="primary">
-                更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item>双皮奶</el-dropdown-item>
-                <el-dropdown-item>蚵仔煎</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
+        <el-button type="primary" icon="el-icon-edit" @click="dialogFormVisible = true"></el-button>
     </el-form>
+
+    <el-dialog title="股票信息" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-input type="hidden" v-model="form.edit" autocomplete="off"></el-input>
+            <el-form-item label="股票代码" :label-width="formLabelWidth">
+                <el-input v-model="form.stockCode" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="股票名称" :label-width="formLabelWidth">
+                <el-input v-model="form.stockName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="交易所" :label-width="formLabelWidth">
+                <el-radio v-model="form.stockArea" label="SZ">深交所</el-radio>
+                <el-radio v-model="form.stockArea" label="SH">上交所</el-radio>
+            </el-form-item>
+            <el-form-item label="描述" :label-width="formLabelWidth">
+                <el-input v-model="form.description" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-radio v-model="form.status" label="1">上市</el-radio>
+                <el-radio v-model="form.status" label="0">退市</el-radio>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
+
     <template>
         <el-table
                 ref="multipleTable"
                 :data="tableData"
                 tooltip-effect="dark"
                 style="width: 100%"
-                height="330">
+                height="450">
             <el-table-column
+                    prop="shares_code"
+                    label="代码"
                     fixed
-                    label="日期"
-                    width="120">
-                <template slot-scope="scope">{{ scope.row.date }}</template>
+                    width="130">
             </el-table-column>
             <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="120">
+                    prop="shares_name"
+                    label="名称"
+                    fixed
+                    width="130">
             </el-table-column>
             <el-table-column
-                    prop="address"
-                    label="地址"
-                    show-overflow-tooltip>
+                    prop="shares_type"
+                    label="地域"
+                    fixed
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="industry_board"
+                    label="行业"
+                    width="120">
             </el-table-column>
             <el-table-column label="操作" fixed="right" width="180">
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -80,10 +107,10 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
+                    :page-sizes="[10, 50, 100]"
                     :page-size="100"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
+                    :total="dataTotal">
             </el-pagination>
         </div>
     </template>

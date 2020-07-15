@@ -6,52 +6,38 @@ new Vue({
                 stockCode: '',
                 stockName: ''
             },
-            pagesize:10,
-            currentPage: 10,
-            tableData: [{
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-08',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-06',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-07',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }],
+            pagesize: 10,
+            currentPage: 1,
+            tableData: [],
+            dataTotal: 0,
+            dialogFormVisible: false,
+            form: {
+                edit:0,
+                stockName: '',
+                stockCode: '',
+                stockArea: 'SZ',
+                desciption: '',
+                status: 1,
+            },
+            formLabelWidth: '120px'
         }
     },
-    created:
-
-        function () {
-        }
-
-    ,
+    created: function () {
+        this.stockList();
+    },
     methods: {
         stockList() {
-            axios.get('http://stock.kaysonzhang.cn:9601/')
+            let param = new FormData()
+            param.append('page', this.currentPage);
+            param.append('pagesize', this.pagesize);
+            param.append('stockCode', this.formInline.stockCode);
+            param.append('stockName', this.formInline.stockName);
+            axios.post('http://stock.kaysonzhang.cn:9601/manage/stock/getList', param)
                 .then((response) => {
                     let jdata = response.data;
-
-
+                    console.log(jdata);
+                    this.tableData = jdata.data;
+                    this.dataTotal = jdata.total;
                 })
                 .catch(function (error) {
                     // handle error
@@ -62,12 +48,18 @@ new Vue({
                 });
         },
         onSubmit() {
+            this.currentPage = 1;
+            this.stockList();
             console.log('submit!');
         },
         handleSizeChange(val) {
+            this.pagesize = val;
+            this.stockList();
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
+            this.currentPage = val;
+            this.stockList();
             console.log(`当前页: ${val}`);
         }
 

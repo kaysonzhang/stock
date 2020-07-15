@@ -280,6 +280,7 @@ class DB
 
     public function limit(int $page, ?int $limit = null)
     {
+        $page = $page > 1 ? $page - 1 : 0;
         $this->client->queryBuilder()->limit($page, $limit);
         return $this;
     }
