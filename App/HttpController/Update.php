@@ -22,17 +22,17 @@ class Update extends Controller
     {
         $data        = '';
         $shares      = (new DB())->name('shares')->select();
-        $shares_code = array_column($shares, 'shares_code');
+        $shares_code = array_column($shares, 'stock_code');
         $jsondata    = json_decode($data, true);
 
         foreach ($jsondata['data']['stocks'] as $key => $v) {
             $code = substr($v['symbol'], 2, 6);
             if (!in_array($code, $shares_code)) {
                 $idata[] = [
-                    'shares_code' => $code,
-                    'shares_type' => $v['exchange'],
-                    'shares_name' => $v['name'],
-                    'status'      => 1,
+                    'stock_code' => $code,
+                    'stock_type' => $v['exchange'],
+                    'stock_name' => $v['name'],
+                    'status'     => 1,
                 ];
             }
         }

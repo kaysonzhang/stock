@@ -11,7 +11,8 @@ class Stock extends BaseController
 {
     private $stockModel;
 
-    public function initialize(){
+    public function initialize()
+    {
         $this->stockModel = new stockModel();
     }
 
@@ -20,26 +21,37 @@ class Stock extends BaseController
         $post = $this->request()->getParsedBody();
 
         $where = "1=1";
-        if(!empty($post['stockCode'])){
-            $where .= " and shares_code like '%{$post['stockCode']}%'";
+        if (!empty($post['stock_code'])) {
+            $where .= " and stock_code like '%{$post['stock_code']}%'";
         }
-        if(!empty($post['stockName'])){
-            $where .= " and shares_name like '%{$post['stockName']}%'";
+        if (!empty($post['stock_name'])) {
+            $where .= " and stock_name like '%{$post['stock_name']}%'";
         }
         $data  = $this->stockModel->getStock($post['page'], $post['pagesize'], $where);
         $total = $this->stockModel->getTotal($where);
         $this->response()->write(json_encode(['data' => $data, 'total' => $total]));
     }
 
-    public function add(){
-        $post = $this->request()->getParsedBody();
-        $insertData = [];
-        $this->stockModel->insert($insertData);
+    public function add()
+    {
+        $post    = $this->request()->getParsedBody();
+        $valitor = new Validate();
+        $valitor->addColumn('stock_code', '股票代号')->required('不为空');
+        $valitor->addColumn('stock_name', '股票名称')->required('不为空');
+        $valitor->addColumn('stock_type', '股票地域')->required('不为空');
+        $bool = $valitor->validate($post);
+        if (!$bool) {
+            $data = ['status' => false, 'msg' => $valitor->getError()->__toString()];
+            $this->response()->write(json_encode($data));
+        }
+        $ret = $this->stockModel->add($post);
+        $this->response()->write(json_encode(['status' => $ret, 'msg' => $ret ? '成功' : '失败']));
     }
 
-    public function eidt(){
-        $post = $this->request()->getParsedBody();
+    public function eidt()
+    {
+        $post       = $this->request()->getParsedBody();
         $insertData = [];
-        $this->stockModel->where()->update($insertData);
+        $this->stockModel->update($insertData,'id=1');
     }
 }

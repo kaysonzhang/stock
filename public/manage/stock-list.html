@@ -19,13 +19,13 @@
 
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="代码">
-            <el-input v-model="formInline.stockCode" placeholder="股票代码"></el-input>
+            <el-input v-model="formInline.stock_code" placeholder="股票代码"></el-input>
         </el-form-item>
         <el-form-item label="名称">
-            <el-input v-model="formInline.stockName" placeholder="股票名称"></el-input>
+            <el-input v-model="formInline.stock_name" placeholder="股票名称"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" @click="onSearch">查询</el-button>
         </el-form-item>
         <el-button type="primary" icon="el-icon-edit" @click="dialogFormVisible = true"></el-button>
     </el-form>
@@ -34,14 +34,14 @@
         <el-form :model="form">
             <el-input type="hidden" v-model="form.edit" autocomplete="off"></el-input>
             <el-form-item label="股票代码" :label-width="formLabelWidth">
-                <el-input v-model="form.stockCode" autocomplete="off"></el-input>
+                <el-input v-model="form.stock_code" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="股票名称" :label-width="formLabelWidth">
-                <el-input v-model="form.stockName" autocomplete="off"></el-input>
+                <el-input v-model="form.stock_name" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="交易所" :label-width="formLabelWidth">
-                <el-radio v-model="form.stockArea" label="SZ">深交所</el-radio>
-                <el-radio v-model="form.stockArea" label="SH">上交所</el-radio>
+                <el-radio v-model="form.stock_type" label="SZ">深交所</el-radio>
+                <el-radio v-model="form.stock_type" label="SH">上交所</el-radio>
             </el-form-item>
             <el-form-item label="描述" :label-width="formLabelWidth">
                 <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -53,7 +53,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            <el-button type="primary" @click="onPost">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -65,19 +65,19 @@
                 style="width: 100%"
                 height="450">
             <el-table-column
-                    prop="shares_code"
+                    prop="stock_code"
                     label="代码"
                     fixed
                     width="130">
             </el-table-column>
             <el-table-column
-                    prop="shares_name"
+                    prop="stock_name"
                     label="名称"
                     fixed
                     width="130">
             </el-table-column>
             <el-table-column
-                    prop="shares_type"
+                    prop="stock_type"
                     label="地域"
                     fixed
                     width="130">
@@ -123,5 +123,6 @@
 <script src="/vuejs/vue.js"></script>
 <!-- import JavaScript -->
 <script src="/vuejs/element-ui.js"></script>
+<script src="/script/global.js?v=12"></script>
 <script src="./script/stock-list.js?v=12"></script>
 </html>

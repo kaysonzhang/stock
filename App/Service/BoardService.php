@@ -47,9 +47,9 @@ class BoardService
                             'turnover_rate'      => $v['f8'],
                             'company_up'         => $v['f104'],
                             'company_down'       => $v['f105'],
-                            'shares_name'        => $v['f128'],
-                            'shares_code'        => $v['f140'],
-                            'shares_rate'        => $v['f136'],
+                            'stock_name'        => $v['f128'],
+                            'stock_code'        => $v['f140'],
+                            'stock_rate'        => $v['f136'],
                         ];
                         $i++;
                     }
@@ -81,7 +81,7 @@ class BoardService
             go(function () use ($wait, &$shareArray, $key, $v) {
                 $client = new \EasySwoole\HttpClient\HttpClient();
                 //默认是普通板块
-                $share  = strtolower($v['shares_type']) . $v['shares_code'];
+                $share  = strtolower($v['stock_type']) . $v['stock_code'];
 
                 $client->setUrl('http://quote.eastmoney.com/' . $share . '.html');
                 $response = $client->get();
@@ -89,7 +89,7 @@ class BoardService
                 if (!empty($result)) {
                     $regex4 = "/<td class=\"tit\".*?>.*?<\/td>/ism";
                     if (preg_match_all($regex4, $result, $matches)) {
-                        $shareArray[$v['shares_code']] = trim(strip_tags($matches[0][0]));
+                        $shareArray[$v['stock_code']] = trim(strip_tags($matches[0][0]));
                     }
                 }
                 $wait->done();
@@ -107,7 +107,7 @@ class BoardService
                 //开启事务
                 $db->startTransaction();
                 foreach ($shareArray as $k => $v) {
-                    $db->name($dbname)->where('shares_code',$k)->update(['industry_board' => $v]);
+                    $db->name($dbname)->where('stock_code',$k)->update(['industry_board' => $v]);
                 }
 
             } catch (\Throwable  $e) {

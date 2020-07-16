@@ -32,7 +32,7 @@
     <el-row v-loading.fullscreen.lock="fullscreenLoading">
         <el-col :span="8" v-for=" (item,index) in sharesData.zhishu" :key="index">
             <div class="grid-content">
-                {{item.shares_name}} {{item.cur_price}}
+                {{item.stock_name}} {{item.cur_price}}
                 <div v-if="item.rise_and_fall > 0">
                     <span class="zhishu_red">+{{ item.rise_and_fall }}(+{{ item.rise_and_fall_rate }}%)</span>
                 </div>
@@ -50,15 +50,15 @@
     <el-tabs v-model="activeName" @tab-click="handleClick" ref="elTabs">
         <el-tab-pane v-for=" (name,index) in todos" :key="index" :label="name" :name="index">
             <el-table :height="tableHeight" :data="sharesData.data[index]" style="width: 100%"
-                      :default-sort="{prop: 'shares_code', order: 'descending'}">
+                      :default-sort="{prop: 'stock_code', order: 'descending'}">
                 <el-table-column
-                        prop="shares_code"
+                        prop="stock_code"
                         label="名称"
                         fixed
                         width="130">
                     <template slot-scope="scope">
-                        <div class="share_black"><a target="_blank" :href="'https://xueqiu.com/S/'+(scope.row.shares_type)+''+(scope.row.shares_code)+''">{{ scope.row.shares_name }}</a></div>
-                        <div class="share_gray">{{ scope.row.shares_type }}{{ scope.row.shares_code }}</div>
+                        <div class="share_black"><a target="_blank" :href="'https://xueqiu.com/S/'+(scope.row.stock_type)+''+(scope.row.stock_code)+''">{{ scope.row.stock_name }}</a></div>
+                        <div class="share_gray">{{ scope.row.stock_type }}{{ scope.row.stock_code }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column

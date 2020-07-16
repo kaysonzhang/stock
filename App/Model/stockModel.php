@@ -13,7 +13,7 @@ use App\Utility\DB;
 class stockModel
 {
     private $tablename = 'stock';
-    private $db;
+    public $db;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class stockModel
     {
         return $this->db
             ->where('status', 1)
-            ->order('shares_code', 'ASC')
+            ->order('stock_code', 'ASC')
             ->select();
     }
 
@@ -38,7 +38,7 @@ class stockModel
             $this->db->where($where);
         }
         $data = $this->db
-            ->order('shares_code', 'ASC')
+            ->order('stock_code', 'ASC')
             ->limit($page, $pagesize)
             ->select();
         return $data;
@@ -49,7 +49,7 @@ class stockModel
         if (!empty($where)) {
             $this->db->where($where);
         }
-        return $this->db->count('shares_code');
+        return $this->db->count('stock_code');
     }
 
 }

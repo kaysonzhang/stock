@@ -29,6 +29,5 @@ class Login extends BaseController
         $token      = JwtUtil::getInstance()->getToken($token_data);
         $data       = ['status' => true, 'token' => $token];
         $this->response()->write(json_encode($data));
-
     }
 }

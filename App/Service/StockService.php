@@ -29,8 +29,8 @@ class StockService
         }
 
         $stock = $this->getShaersDataFormDb();
-        $data = $this->splitData($stock);
-        $wait = new \Swoole\Coroutine\WaitGroup();
+        $data  = $this->splitData($stock);
+        $wait  = new \Swoole\Coroutine\WaitGroup();
 
         $result                = [];
         $result['data']['all'] = [];
@@ -60,7 +60,7 @@ class StockService
         //挂起当前协程，等待所有任务完成后执行下面代码
         //对指数排序一下
         if (!empty($result['zhishu'])) {
-            $shares_code = array_column($result['zhishu'], 'shares_code');
+            $shares_code = array_column($result['zhishu'], 'stock_code');
             array_multisort($shares_code, SORT_ASC, $result['zhishu']);
         }
 
@@ -115,7 +115,7 @@ class StockService
      */
     public function getShaersDataFormDb(): ?array
     {
-        return (new DB())->name('stock')->where('status', 1)->order('shares_code', 'ASC')->select();
+        return (new DB())->name('stock')->where('status', 1)->order('stock_code', 'ASC')->select();
     }
 
 
@@ -132,9 +132,9 @@ class StockService
         $sc = [];
         $sv = [];
         foreach ($data as $key => $v) {
-            $sv[$v['shares_code']] = $v;
+            $sv[$v['stock_code']] = $v;
 
-            $sc[] = strtolower($v['shares_type']) . $v['shares_code'];
+            $sc[] = strtolower($v['stock_type']) . $v['stock_code'];
         }
 
         $shareData = [];
@@ -155,9 +155,9 @@ class StockService
                     }
                     $sdata       = $sv[$share_arr[2]];
                     $shareData[] = [
-                        'shares_code'           => $sdata['shares_code'],
-                        'shares_name'           => $sdata['shares_name'],
-                        'shares_type'           => $sdata['shares_type'],
+                        'stock_code'            => $sdata['stock_code'],
+                        'stock_name'            => $sdata['stock_name'],
+                        'stock_type'            => $sdata['stock_type'],
                         'industry_board'        => $sdata['industry_board'],
                         'concept_board'         => $sdata['concept_board'],
                         'description'           => $sdata['description'],
@@ -195,7 +195,7 @@ class StockService
         foreach ($data['data']['all'] as $k => $v) {
             if ($v['industry_board'] != 'ETF') {
                 $ret                    = $this->getTTM($v);
-                $ttm[$v['shares_code']] = ['ttm' => $ret, 'cur_price' => $v['cur_price'], 'pe' => $v['pe']];
+                $ttm[$v['stock_code']] = ['ttm' => $ret, 'cur_price' => $v['cur_price'], 'pe' => $v['pe']];
             }
         }
 
@@ -219,7 +219,7 @@ class StockService
                 // $ret = $c.'-('.$ttm_rate.')--('.$price.')-'.$ttm_price;
                 // var_dump($ret);
                 (new DB())->name('shares')
-                    ->where('shares_code', $c)
+                    ->where('stock_code', $c)
                     ->update(['best_price' => $ttm_price, 'ttm' => $val['ttm']]);
 
             }
@@ -230,7 +230,7 @@ class StockService
     public function getTTM(array $data)
     {
         $client = new \EasySwoole\HttpClient\HttpClient();
-        $client->setUrl('https://xueqiu.com/S/' . strtoupper($data['shares_type']) . $data['shares_code']);
+        $client->setUrl('https://xueqiu.com/S/' . strtoupper($data['stock_type']) . $data['stock_code']);
         $response = $client->get();
         $shareStr = $response->getBody();
         preg_match_all('#"tableHtml":"(.*?)","isMF#i', $shareStr, $matches);

@@ -114,22 +114,22 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="shares_name"
+                        prop="stock_name"
                         label="领涨股名称"
                         width="130">
                 </el-table-column>
                 <el-table-column
-                        prop="shares_rate"
+                        prop="stock_rate"
                         label="涨跌幅">
                     <template slot-scope="scope">
-                        <div v-if="scope.row.shares_rate > 0">
-                            <span class="share_red">+{{ scope.row.shares_rate }}%</span>
+                        <div v-if="scope.row.stock_rate > 0">
+                            <span class="share_red">+{{ scope.row.stock_rate }}%</span>
                         </div>
-                        <div v-else-if="scope.row.shares_rate < 0">
-                            <span class="share_green">{{ scope.row.shares_rate }}%</span>
+                        <div v-else-if="scope.row.stock_rate < 0">
+                            <span class="share_green">{{ scope.row.stock_rate }}%</span>
                         </div>
                         <div v-else>
-                            {{ scope.row.shares_rate }}%
+                            {{ scope.row.stock_rate }}%
                         </div>
                     </template>
                 </el-table-column>
