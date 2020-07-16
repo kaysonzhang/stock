@@ -10,9 +10,12 @@
 <body>
 <div id="app">
     <el-container>
-        <el-aside width="asidewidth" style="background-color:#fff;">
+        <el-aside width="asidewidth" style="background-color:#1d1e23;border-right:solid 1px #e6e6e6;">
             <div :style="{'height':asideHeight+'px'}">
-                <el-menu :default-openeds="['1']" :collapse="isCollapse">
+                <el-menu :default-openeds="['1']" :collapse="isCollapse"
+                         background-color="#1d1e23"
+                         text-color="#fff"
+                         active-text-color="#fff">
 
                     <el-submenu :index="firstMenu.id" v-for="firstMenu in asideMenu" :key="firstMenu.id">
                         <template slot="title"><i :class="firstMenu.iconClass"></i>
@@ -72,6 +75,10 @@
     }
     .el-main{
         padding:1px 20px;
+    }
+
+    .el-menu{
+        border-right: none;
     }
 
     .el-aside {

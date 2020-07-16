@@ -8,10 +8,10 @@ use EasySwoole\EasySwoole\Crontab\AbstractCronTask;
 /**
  *  定时任务加载数据库中配置的任务
  */
-class ShareClient extends AbstractCronTask
+class StockClient extends AbstractCronTask
 {
 
-    private $logFile = "ShareClient.log";
+    private $logFile = "StockClient.log";
 
     public static function getRule(): string
     {
@@ -20,7 +20,7 @@ class ShareClient extends AbstractCronTask
 
     public static function getTaskName(): string
     {
-        return 'ShareClient';
+        return 'StockClient';
     }
 
     function run(int $taskId, int $workerIndex)

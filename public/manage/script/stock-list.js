@@ -32,7 +32,7 @@ new Vue({
             param.append('pagesize', this.pagesize);
             param.append('stockCode', this.formInline.stockCode);
             param.append('stockName', this.formInline.stockName);
-            axios.post('http://stock.kaysonzhang.cn:9601/manage/stock/getList', param)
+            axios.post(connect_url+'/manage/stock/getList', param)
                 .then((response) => {
                     let jdata = response.data;
                     console.log(jdata);

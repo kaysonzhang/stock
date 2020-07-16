@@ -43,7 +43,7 @@ return [
     'TIMER' => [
         'jobs' => [
             //定时任务列表
-            //App\Crontab\ShareClient::class,
+            //App\Crontab\StockClient::class,
         ]
     ],
 
