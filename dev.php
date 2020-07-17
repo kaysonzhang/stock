@@ -25,16 +25,6 @@ return [
     'LOG_DIR'     => EASYSWOOLE_ROOT . '/Log',
     //配置使用那个调度者
     'TASKER'      => 'center',
-    //调度者base_center数据库配置信息
-    'MYSQL'       => [
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'user'     => 'root',
-        'password' => 'Kayson@398635',
-        'database' => 'stock',
-        'timeout'  => 5,
-        'charset'  => 'utf8mb4',
-    ],
 
     'database' => [
         'default'     => 'mysql',

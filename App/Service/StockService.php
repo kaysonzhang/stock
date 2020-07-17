@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Model\StockModel;
 use App\Utility\DB;
 use App\Utility\DbConfig;
 use EasySwoole\Component\Singleton;
@@ -28,7 +29,7 @@ class StockService
             }
         }
 
-        $stock = $this->getShaersDataFormDb();
+        $stock = (new StockModel())->getStock(1);
         $data  = $this->splitData($stock);
         $wait  = new \Swoole\Coroutine\WaitGroup();
 
@@ -38,7 +39,7 @@ class StockService
         foreach ($data as $k => $v) {
             $wait->add();
             go(function () use ($wait, &$result, $v) {
-                $ret = $this->getSharesDataFromRemote($v);
+                $ret = $this->getStockDataFromRemote($v);
                 if ($ret) {
                     foreach ($ret as $k => $item) {
                         $sort_type = !empty($item['sort_type']) ? $item['sort_type'] : '';
@@ -110,22 +111,12 @@ class StockService
     }
 
     /**
-     * 读取配置的数据库中的股票
-     * @return array|null
-     */
-    public function getShaersDataFormDb(): ?array
-    {
-        return (new DB())->name('stock')->where('status', 1)->order('stock_code', 'ASC')->select();
-    }
-
-
-    /**
      * 从股票api中获取数据
      * @param $data
      * @return array
      * @throws \EasySwoole\HttpClient\Exception\InvalidUrl
      */
-    private function getSharesDataFromRemote($data)
+    private function getStockDataFromRemote($data)
     {
         //睡眠1-2毫秒，防止一起并发达到请求并发限制
         //\Co::sleep(rand(1, 10));
@@ -216,11 +207,7 @@ class StockService
                     $ttm_price = $ttm_rate < $price ? $ttm_rate : $price;
                 }
 
-                // $ret = $c.'-('.$ttm_rate.')--('.$price.')-'.$ttm_price;
-                // var_dump($ret);
-                (new DB())->name('shares')
-                    ->where('stock_code', $c)
-                    ->update(['best_price' => $ttm_price, 'ttm' => $val['ttm']]);
+                (new StockModel())->where('stock_code', $c)->update(['best_price' => $ttm_price, 'ttm' => $val['ttm']]);
 
             }
         }

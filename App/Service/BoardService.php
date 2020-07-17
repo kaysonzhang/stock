@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Model\StockModel;
 use App\Utility\DB;
 use EasySwoole\Component\Singleton;
 
@@ -47,9 +48,9 @@ class BoardService
                             'turnover_rate'      => $v['f8'],
                             'company_up'         => $v['f104'],
                             'company_down'       => $v['f105'],
-                            'stock_name'        => $v['f128'],
-                            'stock_code'        => $v['f140'],
-                            'stock_rate'        => $v['f136'],
+                            'stock_name'         => $v['f128'],
+                            'stock_code'         => $v['f140'],
+                            'stock_rate'         => $v['f136'],
                         ];
                         $i++;
                     }
@@ -69,19 +70,18 @@ class BoardService
      */
     public function updateBorad()
     {
-        $sharesService = new StockService();
-        $s_data        = $sharesService->getShaersDataFormDb();
-        $shareArray    = [];
-        $wait          = new \Swoole\Coroutine\WaitGroup();
+        $s_data     = (new StockModel())->getStock(1);
+        $shareArray = [];
+        $wait       = new \Swoole\Coroutine\WaitGroup();
         foreach ($s_data as $key => $v) {
-            if(in_array($v['sort_type'],['ETF','指数'])){
+            if (in_array($v['sort_type'], ['ETF', '指数'])) {
                 continue;
             }
             $wait->add();
             go(function () use ($wait, &$shareArray, $key, $v) {
                 $client = new \EasySwoole\HttpClient\HttpClient();
                 //默认是普通板块
-                $share  = strtolower($v['stock_type']) . $v['stock_code'];
+                $share = strtolower($v['stock_type']) . $v['stock_code'];
 
                 $client->setUrl('http://quote.eastmoney.com/' . $share . '.html');
                 $response = $client->get();
@@ -97,25 +97,20 @@ class BoardService
         }
         $wait->wait();
 
-        var_dump($shareArray);
+        //var_dump($shareArray);
 
         if ($shareArray) {
-            $db     = new DB();
-            $dbname = 'shares';
-            //事务操作
+            // 启动事务
+            Db::startTrans();
             try {
-                //开启事务
-                $db->startTransaction();
                 foreach ($shareArray as $k => $v) {
-                    $db->name($dbname)->where('stock_code',$k)->update(['industry_board' => $v]);
+                    (new stockModel())->where('stock_code', $k)->update(['industry_board' => $v]);
                 }
-
-            } catch (\Throwable  $e) {
-                //回滚事务
-                $db->rollback();
-            } finally {
-                //提交事务
-                $db->commit();
+                // 提交事务
+                Db::commit();
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
             }
         }
 
