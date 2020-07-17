@@ -12,7 +12,7 @@ new Vue({
             dataTotal: 0,
             dialogFormVisible: false,
             form: {
-                edit: 0,
+                id: 0,
                 stock_name: '',
                 stock_code: '',
                 stock_type: 'SZ',
@@ -62,25 +62,94 @@ new Vue({
             this.stockList();
             console.log(`当前页: ${val}`);
         },
-        onPost() {
+        handleEdit(stock_code) {
             var _this = this;
             let param = new FormData()
             param.append('description', this.form.description);
             param.append('status', this.form.status);
+            param.append('id', this.form.id);
             param.append('stock_code', this.form.stock_code);
             param.append('stock_name', this.form.stock_name);
-            axios.post(connect_url + '/manage/stock/add', param)
+            axios.post(connect_url + '/manage/stock/save', param)
                 .then((response) => {
                     let jdata = response.data;
                     if (jdata.status) {
                         _this.dialogFormVisible = false;
-                    }else{
+                    } else {
                         _this.$alert(jdata.msg, '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 this.$message({
                                     type: 'info',
-                                    message: `action: ${ action }`
+                                    message: `action: ${action}`
+                                });
+                            }
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .then(function () {
+                    // always executed
+                });
+
+        },
+        handleDelete(stock_code) {
+            var _this = this;
+            let param = new FormData()
+            param.append('description', this.form.description);
+            param.append('status', this.form.status);
+            param.append('id', this.form.id);
+            param.append('stock_code', this.form.stock_code);
+            param.append('stock_name', this.form.stock_name);
+            axios.post(connect_url + '/manage/stock/save', param)
+                .then((response) => {
+                    let jdata = response.data;
+                    if (jdata.status) {
+                        _this.dialogFormVisible = false;
+                    } else {
+                        _this.$alert(jdata.msg, '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.$message({
+                                    type: 'info',
+                                    message: `action: ${action}`
+                                });
+                            }
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .then(function () {
+                    // always executed
+                });
+
+        },
+        onPost() {
+            var _this = this;
+            let param = new FormData()
+            param.append('description', this.form.description);
+            param.append('status', this.form.status);
+            param.append('id', this.form.id);
+            param.append('stock_code', this.form.stock_code);
+            param.append('stock_name', this.form.stock_name);
+            axios.post(connect_url + '/manage/stock/save', param)
+                .then((response) => {
+                    let jdata = response.data;
+                    if (jdata.status) {
+                        _this.dialogFormVisible = false;
+                    } else {
+                        _this.$alert(jdata.msg, '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.$message({
+                                    type: 'info',
+                                    message: `action: ${action}`
                                 });
                             }
                         });

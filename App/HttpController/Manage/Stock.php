@@ -32,33 +32,68 @@ class Stock extends BaseController
         $this->response()->write(json_encode(['data' => $data, 'total' => $total]));
     }
 
-    public function add()
+    public function getStock()
     {
         $post    = $this->request()->getParsedBody();
         $valitor = new Validate();
-        $valitor->addColumn('stock_code', '股票代号')->required('不为空');
-        $valitor->addColumn('stock_name', '股票名称')->required('不为空');
-        $valitor->addColumn('stock_type', '股票地域')->required('不为空');
+        $valitor->addColumn('stock_code', '股票代号')->notEmpty();
         $bool = $valitor->validate($post);
         if (!$bool) {
             $data = ['status' => false, 'msg' => $valitor->getError()->__toString()];
             $this->response()->write(json_encode($data));
         }
-        $ret = $this->stockModel->add($post);
+
+        $ret = $this->stockModel->where('stock_code=' . $post['stock_code'])->find();
+        $this->response()->write(json_encode(['status' => $ret, 'data' => $ret]));
+    }
+
+    public function add()
+    {
+        $post = $this->request()->getRequestParam();
+        $ret  = $this->validate($post);
+        if (!$ret['status']) {
+            $data = ['status' => false, 'msg' => $ret['msg']];
+            $this->response()->write(json_encode($data));
+        }
+        $ret = $this->stockModel->replace()->insertGetId($post);
         $this->response()->write(json_encode(['status' => $ret, 'msg' => $ret ? '成功' : '失败']));
+    }
+
+    private function validate($post)
+    {
+        $valitor = new Validate();
+        $valitor->addColumn('stock_code', '股票代号')->notEmpty();
+        $valitor->addColumn('stock_name', '股票名称')->notEmpty();
+        $valitor->addColumn('stock_type', '股票地域')->notEmpty();
+        $bool = $valitor->validate($post);
+        return ['status' => $bool, 'msg' => $valitor->getError()->__toString()];
     }
 
     public function eidt()
     {
-        $post       = $this->request()->getParsedBody();
-        $insertData = [];
-        $this->stockModel->update($insertData,'id=1');
+        $post = $this->request()->getParsedBody();
+        $ret  = $this->validate($post);
+        if (!$ret['status']) {
+            $data = ['status' => false, 'msg' => $ret['msg']];
+            $this->response()->write(json_encode($data));
+        }
+
+        $ret = $this->stockModel->where('stock_code=' . $post['id'])->update($post);
+        $this->response()->write(json_encode(['status' => $ret, 'msg' => $ret ? '成功' : '失败']));
     }
 
     public function del()
     {
-        $post       = $this->request()->getParsedBody();
-        $insertData = [];
-        $this->stockModel->del('id=1');
+        $post    = $this->request()->getParsedBody();
+        $valitor = new Validate();
+        $valitor->addColumn('stock_code', '股票代号')->notEmpty();
+        $bool = $valitor->validate($post);
+        if (!$bool) {
+            $data = ['status' => false, 'msg' => $valitor->getError()->__toString()];
+            $this->response()->write(json_encode($data));
+        }
+
+        $ret = $this->stockModel->where('stock_code=' . $post['stock_code'])->delete();
+        $this->response()->write(json_encode(['status' => $ret, 'msg' => $ret ? '成功' : '失败']));
     }
 }

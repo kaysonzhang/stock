@@ -32,7 +32,7 @@
 
     <el-dialog title="股票信息" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-            <el-input type="hidden" v-model="form.edit" autocomplete="off"></el-input>
+            <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
             <el-form-item label="股票代码" :label-width="formLabelWidth">
                 <el-input v-model="form.stock_code" autocomplete="off"></el-input>
             </el-form-item>
