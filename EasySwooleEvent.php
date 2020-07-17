@@ -10,6 +10,7 @@ use EasySwoole\EasySwoole\AbstractInterface\Event;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\Http\Request;
 use EasySwoole\Http\Response;
+use think\facade\Db;
 
 class EasySwooleEvent implements Event
 {
@@ -26,6 +27,9 @@ class EasySwooleEvent implements Event
     public static function mainServerCreate(EventRegister $register)
     {
         // TODO: Implement mainServerCreate() method.
+        //设置数据库连接
+        $db_config= Config::getInstance()->getConf('database');
+        Db::setConfig($db_config);
         /**
          * **************** Crontab任务计划 **********************
          */

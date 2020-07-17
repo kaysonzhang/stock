@@ -54,4 +54,11 @@ class Stock extends BaseController
         $insertData = [];
         $this->stockModel->update($insertData,'id=1');
     }
+
+    public function del()
+    {
+        $post       = $this->request()->getParsedBody();
+        $insertData = [];
+        $this->stockModel->del('id=1');
+    }
 }
