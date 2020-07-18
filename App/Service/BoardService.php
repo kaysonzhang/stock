@@ -3,8 +3,8 @@
 namespace App\Service;
 
 use App\Model\StockModel;
-use App\Utility\DB;
 use EasySwoole\Component\Singleton;
+use think\facade\Db;
 
 
 class BoardService

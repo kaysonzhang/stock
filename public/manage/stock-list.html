@@ -27,7 +27,8 @@
         <el-form-item>
             <el-button type="primary" @click="onSearch">查询</el-button>
         </el-form-item>
-        <el-button type="primary" icon="el-icon-edit" @click="dialogFormVisible = true"></el-button>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="dialogFormVisible = true">添加</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="updateBorad">更新板块</el-button>
     </el-form>
 
     <el-dialog title="股票信息" :visible.sync="dialogFormVisible">
@@ -91,12 +92,12 @@
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑
+                            @click="handleEdit(scope.row.stock_code)">编辑
                     </el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除
+                            @click="handleDelete(scope.row.stock_code)">删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -108,7 +109,7 @@
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
                     :page-sizes="[10, 50, 100]"
-                    :page-size="100"
+                    :page-size="pagesize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="dataTotal">
             </el-pagination>

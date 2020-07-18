@@ -17,9 +17,8 @@ class Index extends Controller
 
     public function index()
     {
-        $shareData = StockService::getInstance()->getShares();
-        $this->response()->write(json_encode($shareData));
-        //$this->response()->write($this->clientRealIP( 'x-real-ip'));
+        $data = StockService::getInstance()->getShares();
+        return $this->writeJson(200, $data);
     }
 
     /**
@@ -29,27 +28,27 @@ class Index extends Controller
     public function board()
     {
         $boardData = BoardService::getInstance()->getBorad();
-        $this->response()->write(json_encode($boardData));
+        return $this->writeJson(200, $boardData);
     }
 
 
     protected function actionNotFound(?string $action)
     {
         $this->response()->withStatus(404);
-        $this->response()->write(404);
+        return $this->response()->write(404);
     }
 
     protected function onException(\Throwable $throwable): void
     {
         if ($throwable instanceof ParamAnnotationValidateError) {
             $msg = $throwable->getValidate()->getError()->getErrorRuleMsg();
-            $this->writeJson(400, null, "{$msg}");
+            return $this->writeJson(400, null, "{$msg}");
         } else {
             if (Core::getInstance()->isDev()) {
-                $this->writeJson(500, null, $throwable->getMessage());
+                return $this->writeJson(500, null, $throwable->getMessage());
             } else {
                 Trigger::getInstance()->throwable($throwable);
-                $this->writeJson(500, null, '系统内部错误，请稍后重试');
+                return $this->writeJson(500, null, '系统内部错误，请稍后重试');
             }
         }
     }

@@ -20,7 +20,8 @@ abstract class BaseController extends Controller
     /**
      * 初始化
      */
-    protected function initialize(){
+    protected function initialize()
+    {
 
     }
 
@@ -38,14 +39,13 @@ abstract class BaseController extends Controller
      * @param bool $status
      * @return bool
      */
-    protected function responseJson($statusCode = 200, $data = [], $msg = null, $status=false)
+    protected function responseJson($statusCode = 200, $data = [], $msg = null)
     {
         if (!$this->response()->isEndResponse()) {
             $data = Array(
-                'code'    => $statusCode,
-                'message' => $msg,
-                'status'  => $status,
-                'data'    => $data
+                'code' => $statusCode,
+                'msg'  => $msg,
+                'data' => $data
             );
 
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
