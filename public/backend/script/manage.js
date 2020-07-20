@@ -6,7 +6,7 @@ new Vue({
             asidewidth: 100,
             asideHeight:500,
             asideMenu:menus,
-            iframeUrl:'/manage/stock-list.html',
+            iframeUrl:'/backend/stock-list.html',
         }
     },
     created: function () {

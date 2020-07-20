@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\HttpController\Manage;
+namespace App\HttpController\Backend;
 
 use App\Service\BoardService;
 use EasySwoole\Validate\Validate;

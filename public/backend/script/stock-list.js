@@ -32,7 +32,7 @@ new Vue({
             param.append('pagesize', this.pagesize);
             param.append('stock_code', this.formInline.stock_code);
             param.append('stock_name', this.formInline.stock_name);
-            axios.post(connect_url + '/manage/stock/getList', param)
+            axios.post(connect_url + '/backend/stock/getList', param)
                 .then((response) => {
                     let jdata = response.data;
                     console.log(jdata);
@@ -72,7 +72,7 @@ new Vue({
             var _this = this;
             let param = new FormData();
             param.append('stock_code', '');
-            axios.post(connect_url + '/manage/stock/updateBorad', param)
+            axios.post(connect_url + '/backend/stock/updateBorad', param)
                 .then((response) => {
                     let jdata = response.data;
                     if (jdata.code == 200) {
@@ -95,7 +95,7 @@ new Vue({
             this.form.id = stock_code
             let param = new FormData();
             param.append('stock_code', stock_code);
-            axios.post(connect_url + '/manage/stock/getStock', param)
+            axios.post(connect_url + '/backend/stock/getStock', param)
                 .then((response) => {
                     let jdata = response.data;
                     if (jdata.code == 200) {
@@ -124,7 +124,7 @@ new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                axios.post(connect_url + '/manage/stock/del', param)
+                axios.post(connect_url + '/backend/stock/del', param)
                     .then((response) => {
                         let jdata = response.data;
                         if (jdata.code == 200) {
@@ -159,7 +159,7 @@ new Vue({
             param.append('stock_code', this.form.stock_code);
             param.append('stock_name', this.form.stock_name);
             param.append('stock_type', this.form.stock_type);
-            axios.post(connect_url + '/manage/stock/save', param)
+            axios.post(connect_url + '/backend/stock/save', param)
                 .then((response) => {
                     let jdata = response.data;
                     if (jdata.code == 200) {

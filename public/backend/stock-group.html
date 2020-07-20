@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/share.css">
+
+</head>
+<body>
+<div id="app">
+    <div style="padding:15px 0;">
+        <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>股票管理</el-breadcrumb-item>
+            <el-breadcrumb-item>股票分组</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="名称">
+            <el-input v-model="formInline.group_name" placeholder="名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSearch">查询</el-button>
+        </el-form-item>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="dialogFormVisible = true">添加</el-button>
+    </el-form>
+
+    <el-dialog title="分组" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="名称" :label-width="formLabelWidth">
+                <el-input v-model="form.group_name" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="onPost">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <template>
+        <el-table
+                ref="multipleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                style="width: 100%"
+                height="450">
+            <el-table-column
+                    prop="id"
+                    label="id"
+                    fixed
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="group_name"
+                    label="名称"
+                    fixed
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="user_id"
+                    label="所属用户"
+                    width="120">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.user_id == 0">系统</div>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" fixed="right" width="180">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.row.id)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <div class="block" style="margin-top:5px;">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[10, 50, 100]"
+                    :page-size="pagesize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="dataTotal">
+            </el-pagination>
+        </div>
+    </template>
+
+</div>
+
+</body>
+<script src="/vuejs/axios.min.js"></script>
+<!-- import Vue before Element -->
+<script src="/vuejs/vue.js"></script>
+<!-- import JavaScript -->
+<script src="/vuejs/element-ui.js"></script>
+<script src="/script/global.js"></script>
+<script src="script/stock-group.js"></script>
+</html>
