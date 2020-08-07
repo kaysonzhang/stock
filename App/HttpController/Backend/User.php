@@ -1,18 +1,18 @@
 <?php
 namespace App\HttpController\Backend;
 
-use App\Model\GroupModel;
+use App\Model\userModel;
 use EasySwoole\Validate\Validate;
 use App\HttpController\BaseController;
 
 
-class Group extends BaseController
+class User extends BaseController
 {
-    private $groupModel;
+    private $userModel;
 
     public function initialize()
     {
-        $this->groupModel = new GroupModel();
+        $this->userModel = new UserModel();
     }
 
     /**
@@ -27,7 +27,7 @@ class Group extends BaseController
             $where .= " and group_name like '%{$post['group_name']}%'";
         }
 
-        $data = ($this->groupModel->where($where)->paginate([
+        $data = ($this->userModel->where($where)->paginate([
             'list_rows' => $post['pagesize'],
             'page'      => $post['page'],
             'var_page'  => 'page',
@@ -46,7 +46,7 @@ class Group extends BaseController
         $valitor = new Validate();
         $valitor->addColumn('id', 'id')->notEmpty();
         $valitor->validate($post);
-        $data = $this->groupModel->where('id=' . $post['id'])->find();
+        $data = $this->userModel->where('id=' . $post['id'])->find();
         return $this->responseJson(200, $data);
 
     }
@@ -60,10 +60,10 @@ class Group extends BaseController
         $post = $this->request()->getRequestParam();
         $this->validate($post);
         if (!empty($post['id'])) {
-            $ret = $this->groupModel->where("id='{$post['id']}'")->update($post);
+            $ret = $this->userModel->where("id='{$post['id']}'")->update($post);
         } else {
             unset($post['id']);
-            $ret = $this->groupModel->insertGetId($post);
+            $ret = $this->userModel->insertGetId($post);
         }
         if ($ret) {
             return $this->responseJson(200, $post);
@@ -101,7 +101,7 @@ class Group extends BaseController
             return $this->responseJson(500, [], $valitor->getError()->__toString());
         }
 
-        $ret = $this->groupModel->where('id=' . $post['id'])->delete();
+        $ret = $this->userModel->where('id=' . $post['id'])->delete();
         if ($ret) {
             return $this->responseJson(200, $post);
         }

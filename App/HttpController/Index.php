@@ -42,13 +42,13 @@ class Index extends Controller
     {
         if ($throwable instanceof ParamAnnotationValidateError) {
             $msg = $throwable->getValidate()->getError()->getErrorRuleMsg();
-            return $this->writeJson(400, null, "{$msg}");
+            $this->writeJson(400, null, "{$msg}");
         } else {
             if (Core::getInstance()->isDev()) {
-                return $this->writeJson(500, null, $throwable->getMessage());
+                $this->writeJson(500, null, $throwable->getMessage());
             } else {
                 Trigger::getInstance()->throwable($throwable);
-                return $this->writeJson(500, null, '系统内部错误，请稍后重试');
+                $this->writeJson(500, null, '系统内部错误，请稍后重试');
             }
         }
     }
